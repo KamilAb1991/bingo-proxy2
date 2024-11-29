@@ -44,7 +44,7 @@ app.post('/proxy/bingo2', async (req, res) => {
     const cacheKey = `bingoRooms2:${currency}:${language}`;
     const xHash = currency === 'VBC' ? hashVbc : hashWoc;
 
-        function formatRequestBody(data) {
+    function formatRequestBody(data) {
         return JSON.stringify(data, null, 0).replace(/:/g, ': ');
     }
 
@@ -92,4 +92,7 @@ app.post('/proxy/bingo2', async (req, res) => {
 //Vercel
 module.exports = app;
 
-process.on('exit', () => redisClient.quit());
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = 8084;
+    app.listen(PORT, () => console.log(`Proxy server running on http://localhost:${PORT}`));
+}
