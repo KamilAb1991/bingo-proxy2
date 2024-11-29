@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 8084;
 app.use(cors());
 app.use(express.json());
 
-// Logger dla debugowania
 app.use((req, res, next) => {
     console.log(`[Proxy Log] Incoming request: ${req.method} ${req.url}`);
     console.log(`[Proxy Log] Headers:`, req.headers);
@@ -18,23 +17,21 @@ app.use((req, res, next) => {
     next();
 });
 
-// Konfiguracja Redis
 const redisClient = redis.createClient({
-    url: 'rediss://frank-llama-21182.upstash.io', // Twój URL do Redis (Upstash w tym przypadku)
-    password: 'AVK-AAIjcDE4MjZiMDI3YzQ2NWM0NTgwODViNWVkY2NkMjU2NTI3MnAxMA', // Hasło do Redis
+    url: 'rediss://frank-llama-21182.upstash.io',
+    password: 'AVK-AAIjcDE4MjZiMDI3YzQ2NWM0NTgwODViNWVkY2NkMjU2NTI3MnAxMA',
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect();
 
-const hashVbc = '7d997897934a87d208af3ea7df9e8d72'; // Hash dla VBC
-const hashWoc = '15a75aebc1a03c0067138ebcd931108e'; // Hash dla WOC
+const hashVbc = '7d997897934a87d208af3ea7df9e8d72';
+const hashWoc = '15a75aebc1a03c0067138ebcd931108e';
 
 // Endpoint proxy
 app.post('/proxy/bingo2', async (req, res) => {
     const { currency, language } = req.body;
 
-    // Walidacja waluty
     let secureLogin;
     if (currency === 'WOC') {
         secureLogin = 'wwvgs_wowvegas';
@@ -52,7 +49,6 @@ app.post('/proxy/bingo2', async (req, res) => {
     }
 
     try {
-        // Sprawdź cache w Redis
         const cachedData = await redisClient.get(cacheKey);
         if (cachedData) {
             console.log('[Proxy Log] Cache hit');
@@ -70,7 +66,7 @@ app.post('/proxy/bingo2', async (req, res) => {
 
         console.log(`[Proxy Log] Sending to API with body:`, requestBody);
 
-        // Wysyłanie żądania do API
+        //API
         const response = await axios.post(
             'https://api-bingo.prerelease-env.biz/BingoIntegration/BingoGameAPI/RoomList/v2',
             requestBody,
@@ -82,7 +78,6 @@ app.post('/proxy/bingo2', async (req, res) => {
             }
         );
 
-        // Zapisz dane w Redis z czasem wygaśnięcia 30 sekund
         await redisClient.set(cacheKey, JSON.stringify(response.data), {
             EX: 30,
         });
@@ -94,7 +89,7 @@ app.post('/proxy/bingo2', async (req, res) => {
     }
 });
 
-// Eksport dla Vercel
+//Vercel
 module.exports = app;
 
 process.on('exit', () => redisClient.quit());
