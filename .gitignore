@@ -1,0 +1,16 @@
+# Node.js dependencies
+node_modules/
+
+# Vercel folder
+.vercel/
+
+# Environment variables
+.env
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.idea/
+.vscode/

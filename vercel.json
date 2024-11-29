@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/proxy/bingo2",
+      "destination": "/api/proxy"
+    }
+  ]
+}
