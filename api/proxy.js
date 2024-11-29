@@ -89,10 +89,11 @@ app.post('/proxy/bingo2', async (req, res) => {
     }
 });
 
-//Vercel
-module.exports = app;
-
 if (process.env.NODE_ENV !== 'production') {
     const PORT = 8084;
     app.listen(PORT, () => console.log(`Proxy server running on http://localhost:${PORT}`));
 }
+
+
+//Vercel
+module.exports = app;
