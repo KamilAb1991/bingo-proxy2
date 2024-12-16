@@ -95,5 +95,17 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
+app.get('/proxy/get-ip', async (req, res) => {
+    try {
+        const response = await axios.get('https://api64.ipify.org?format=json');
+        console.log(`[Proxy Log] Public IP: ${response.data.ip}`);
+        res.json({ publicIp: response.data.ip });
+    } catch (error) {
+        console.error('[Proxy Log] Error fetching public IP:', error.message);
+        res.status(500).json({ error: 'Failed to fetch public IP' });
+    }
+});
+
+
 //Vercel
 module.exports = app;
