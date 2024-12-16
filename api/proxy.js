@@ -97,7 +97,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.get('/proxy/get-ip', async (req, res) => {
     try {
-        const response = await axios.get('https://api64.ipify.org?format=json');
+        const response = await axios.get('https://ifconfig.me/all.json');
         console.log(`[Proxy Log] Public IP: ${response.data.ip}`);
         res.json({ publicIp: response.data.ip });
     } catch (error) {
