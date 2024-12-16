@@ -94,18 +94,5 @@ if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => console.log(`Proxy server running on http://localhost:${PORT}`));
 }
 
-
-app.get('/proxy/get-ip', async (req, res) => {
-    try {
-        const response = await axios.get('https://ifconfig.me/all.json');
-        console.log(`[Proxy Log] Public IP: ${response.data.ip}`);
-        res.json({ publicIp: response.data.ip });
-    } catch (error) {
-        console.error('[Proxy Log] Error fetching public IP:', error.message);
-        res.status(500).json({ error: 'Failed to fetch public IP' });
-    }
-});
-
-
 //Vercel
 module.exports = app;
